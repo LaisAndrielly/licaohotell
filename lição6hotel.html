@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orçamento de Manutenção</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #e6e6fa; /* Cor de fundo roxa clara */
+        }
+        h1 {
+            color: #6a0dad; /* Cor do título roxa */
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            border: 1px solid #6a0dad; /* Borda roxa */
+        }
+        button {
+            background-color: #8a2be2; /* Cor do botão roxa */
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #7b1fa2; /* Tom mais escuro ao passar o mouse */
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #dcd0ff; /* Fundo da área de resultado roxo claro */
+            border: 1px solid #6a0dad; /* Borda roxa */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Orçamento de Manutenção de Ar-Condicionado</h1>
+    <div id="inputSection">
+        <button onclick="iniciarOrcamento()">Iniciar Orçamento</button>
+    </div>
+    <div class="result" id="resultado"></div>
+
+    <script>
+        function iniciarOrcamento() {
+            let continuar = 'S';
+            let menorValor = Infinity;
+            let empresaMenorValor = '';
+
+            while (continuar.toUpperCase() === 'S') {
+                const nomeEmpresa = prompt("Qual o nome da empresa?");
+                const valorPorAparelho = parseFloat(prompt("Qual o valor por aparelho?"));
+                const quantidadeAparelhos = parseInt(prompt("Qual a quantidade de aparelhos?"));
+                const percentualDesconto = parseFloat(prompt("Qual a porcentagem de desconto?"));
+                const quantidadeMinimaDesconto = parseInt(prompt("Qual o número mínimo de aparelhos para conseguir o desconto?"));
+
+                let valorTotal = valorPorAparelho * quantidadeAparelhos;
+
+                if (quantidadeAparelhos >= quantidadeMinimaDesconto) {
+                    const desconto = (percentualDesconto / 100) * valorTotal;
+                    valorTotal -= desconto;
+                }
+
+                document.getElementById('resultado').innerText += `O serviço de ${nomeEmpresa} custará R$ ${valorTotal.toFixed(2)}\n`;
+
+                // Verifica se o orçamento é o menor
+                if (valorTotal < menorValor) {
+                    menorValor = valorTotal;
+                    empresaMenorValor = nomeEmpresa;
+                }
+
+                continuar = prompt(`Deseja informar novos dados? (S/N)`);
+            }
+
+            document.getElementById('resultado').innerText += `O orçamento de menor valor é o de ${empresaMenorValor} por R$ ${menorValor.toFixed(2)}.`;
+        }
+    </script>
+
+</body>
+</html>
+

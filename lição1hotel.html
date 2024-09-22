@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Laís Encantado - Reservas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e1bee7; /* Fundo roxo claro */
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #6a0dad; /* Título roxo */
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #6a0dad; /* Borda roxa */
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #8a2be2; /* Botão roxo */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #7b1fa2; /* Tom mais escuro ao passar o mouse */
+        }
+        .message {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hotel Laís Encantado - Reservas</h1>
+    <div class="container">
+        <form id="reservaForm">
+            <input type="number" id="valorDiaria" placeholder="Valor da Diária" required>
+            <input type="number" id="quantidadeDias" min="1" max="30" placeholder="Quantidade de Dias" required>
+            <input type="text" id="nomeHospede" placeholder="Nome do Hóspede" required>
+            <input type="number" id="quarto" min="1" max="20" placeholder="Quarto (1-20)" required>
+            <button type="submit">Confirmar Reserva</button>
+        </form>
+        <div class="message error" id="errorMessage" style="display:none;"></div>
+        <div class="message success" id="successMessage" style="display:none;"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('reservaForm');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+
+        let quartos = Array(20).fill('livre');
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+
+            const valorDiaria = parseFloat(document.getElementById('valorDiaria').value);
+            const quantidadeDias = parseInt(document.getElementById('quantidadeDias').value);
+            const nomeHospede = document.getElementById('nomeHospede').value;
+            const numeroQuarto = parseInt(document.getElementById('quarto').value) - 1;
+
+            if (valorDiaria < 0 || quantidadeDias <= 0 || quantidadeDias > 30) {
+                errorMessage.innerText = `Valor inválido, ${nomeHospede}`;
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            if (quartos[numeroQuarto] === 'ocupado') {
+                errorMessage.innerText = "Quarto já está ocupado. Escolha outro.";
+                errorMessage.style.display = 'block';
+                return;
+            }
+
+            const valorTotal = valorDiaria * quantidadeDias;
+            const confirmacao = confirm(`${nomeHospede}, você confirma a hospedagem por ${quantidadeDias} dias no quarto ${numeroQuarto + 1} por R$${valorTotal.toFixed(2)}?`);
+
+            if (confirmacao) {
+                quartos[numeroQuarto] = 'ocupado';
+                successMessage.innerText = `${nomeHospede}, reserva efetuada.`;
+                successMessage.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+

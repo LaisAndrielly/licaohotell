@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reservas de Eventos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #e1bee7; /* Fundo roxo claro */
+        }
+        h1, h2 {
+            color: #6a0dad; /* Cor do título roxa */
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            border: 1px solid #6a0dad; /* Borda roxa */
+        }
+        button {
+            background-color: #8a2be2; /* Cor do botão roxa */
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #7b1fa2; /* Tom mais escuro ao passar o mouse */
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f3e5f5; /* Fundo da área de resultado roxo claro */
+            border: 1px solid #6a0dad; /* Borda roxa */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Reservas de Eventos</h1>
+    <div id="step1">
+        <h2>Parte 1: Quantidade de Convidados</h2>
+        <input type="number" id="convidados" placeholder="Número de convidados" min="0">
+        <button onclick="parte1()">Verificar</button>
+        <div class="result" id="resultado"></div>
+    </div>
+
+    <div id="step2" style="display: none;">
+        <h2>Parte 2: Agenda</h2>
+        <input type="text" id="dia" placeholder="Dia do evento (ex: segunda)">
+        <input type="number" id="hora" placeholder="Hora do evento" min="0" max="23">
+        <input type="text" id="empresa" placeholder="Nome da empresa">
+        <button onclick="parte2()">Reservar Auditório</button>
+        <div class="result" id="resultado2"></div>
+    </div>
+
+    <div id="step3" style="display: none;">
+        <h2>Parte 3: Garçons</h2>
+        <input type="number" id="duracao" placeholder="Duração do evento (em horas)" min="1">
+        <button onclick="parte3()">Calcular Garçons</button>
+        <div class="result" id="resultado3"></div>
+    </div>
+
+    <div id="step4" style="display: none;">
+        <h2>Parte 4: Buffet</h2>
+        <div class="result" id="resultado4"></div>
+        <button onclick="finalizar()">Finalizar Reserva</button>
+    </div>
+
+    <script>
+        let convidados, dia, hora, empresa, duracao;
+
+        function parte1() {
+            convidados = parseInt(document.getElementById('convidados').value);
+            const resultado = document.getElementById('resultado');
+            if (convidados < 0 || convidados > 350) {
+                resultado.innerText = "Número de convidados inválido.";
+            } else {
+                const capacidadeLaranja = 150;
+                const capacidadeAdicionalLaranja = 70;
+
+                if (convidados <= capacidadeLaranja + capacidadeAdicionalLaranja) {
+                    const cadeirasAdicionais = Math.max(0, convidados - capacidadeLaranja);
+                    resultado.innerText = `Use o auditório Laranja (inclua mais ${cadeirasAdicionais} cadeiras)`;
+                } else {
+                    resultado.innerText = "Use o auditório Colorado";
+                }
+                resultado.innerText += "\nAgora vamos ver a agenda do evento.";
+                document.getElementById('step1').style.display = 'none';
+                document.getElementById('step2').style.display = 'block';
+            }
+        }
+
+        function parte2() {
+            dia = document.getElementById('dia').value.toLowerCase();
+            hora = parseInt(document.getElementById('hora').value);
+            empresa = document.getElementById('empresa').value;
+            const resultado = document.getElementById('resultado2');
+            const diasDisponiveis = ["segunda", "terca", "quarta", "quinta", "sexta", "sabado", "domingo"];
+            const disponivel = (diasDisponiveis.includes(dia) && 
+                ((hora >= 7 && hora <= 23 && dia !== "sabado" && dia !== "domingo") || 
+                (hora >= 7 && hora <= 15 && (dia === "sabado" || dia === "domingo"))));
+
+            if (disponivel) {
+                resultado.innerText = `Auditório reservado para ${empresa}. ${dia} às ${hora}hs.`;
+                document.getElementById('step2').style.display = 'none';
+                document.getElementById('step3').style.display = 'block';
+            } else {
+                resultado.innerText = "Auditório indisponível";
+            }
+        }
+
+        function parte3() {
+            duracao = parseInt(document.getElementById('duracao').value);
+            const garçons = Math.ceil(convidados / 12) + Math.ceil(duracao / 2);
+            const custo = garçons * 10.50 * duracao;
+            const resultado = document.getElementById('resultado3');
+            resultado.innerText = `São necessários ${garçons} garçons.\nCusto: R$ ${custo.toFixed(2)}`;
+            document.getElementById('step3').style.display = 'none';
+            document.getElementById('step4').style.display = 'block';
+            calcularBuffet(garçons);
+        }
+
+        function calcularBuffet(garçons) {
+            const litrosCafe = convidados * 0.2;
+            const litrosAgua = convidados * 0.5;
+            const salgados = convidados * 7;
+            const custoBuffet = (litrosCafe * 0.80) + (litrosAgua * 0.40) + (Math.ceil(salgados / 100) * 34);
+            const resultado = document.getElementById('resultado4');
+            resultado.innerText = `O evento precisará de ${litrosCafe.toFixed(2)} litros de café, ${litrosAgua.toFixed(2)} litros de água, ${salgados} salgados.\nCusto do Buffet: R$ ${custoBuffet.toFixed(2)}`;
+            mostrarResumo(garçons, custoBuffet);
+        }
+
+        function mostrarResumo(garçons, custoBuffet) {
+            const totalCusto = (garçons * 10.50 * duracao) + custoBuffet;
+            const resultado = `
+                Evento no auditório ${convidados <= 220 ? "Laranja" : "Colorado"}.
+                Nome da Empresa: ${empresa}.
+                Data: ${dia}, ${hora}H às ${hora + duracao}h.
+                Duração do evento: ${duracao}H.
+                Quantidade de garçons: ${garçons}.
+                Quantidade de Convidados: ${convidados}
+                Custo do garçons: R$ ${(garçons * 10.50 * duracao).toFixed(2)}
+                Custo do Buffet: R$ ${custoBuffet.toFixed(2)}
+                Valor total do Evento: R$ ${totalCusto.toFixed(2)}
+                Gostaria de efetuar a reserva? S/N
+            `;
+            const reserva = prompt(resultado);
+            if (reserva && reserva.toUpperCase() === 'S') {
+                alert(`${empresa}, reserva efetuada com sucesso.`);
+                alert("Obrigado, volte sempre!");
+            } else {
+                alert("Reserva não efetuada.");
+            }
+        }
+
+        function finalizar() {
+            // A função de finalizar agora está incorporada ao fluxo de mostrar resumo.
+        }
+    </script>
+
+</body>
+</html>
+

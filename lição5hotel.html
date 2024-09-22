@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Álcool ou Gasolina</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f3e5f5; /* Fundo roxo claro */
+        }
+        h1 {
+            color: #6a0dad; /* Cor do título roxa */
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            border: 1px solid #6a0dad; /* Borda roxa */
+        }
+        button {
+            background-color: #8a2be2; /* Cor do botão roxa */
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #7b1fa2; /* Tom mais escuro ao passar o mouse */
+        }
+        .result {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e1bee7; /* Fundo da área de resultado roxo claro */
+            border: 1px solid #6a0dad; /* Borda roxa */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Comparar Preços de Combustível</h1>
+    <div>
+        <h2>Posto Wayne Oil</h2>
+        <input type="number" id="alcoolWayne" placeholder="Valor do álcool" step="0.01">
+        <input type="number" id="gasolinaWayne" placeholder="Valor da gasolina" step="0.01">
+    </div>
+
+    <div>
+        <h2>Posto Stark Petrol</h2>
+        <input type="number" id="alcoolStark" placeholder="Valor do álcool" step="0.01">
+        <input type="number" id="gasolinaStark" placeholder="Valor da gasolina" step="0.01">
+    </div>
+
+    <button onclick="compararPrecos()">Verificar Combustível</button>
+    <div class="result" id="resultado"></div>
+
+    <script>
+        let nome = prompt("Qual é o seu nome?");
+
+        window.addEventListener("beforeunload", function (event) {
+            event.preventDefault();
+            event.returnValue = ''; // Mostra o alerta padrão do navegador
+            alert(`Muito obrigado e até logo, ${nome}.`);
+            alert("Obrigado, volte sempre!");
+        });
+
+        function compararPrecos() {
+            const alcoolWayne = parseFloat(document.getElementById('alcoolWayne').value);
+            const gasolinaWayne = parseFloat(document.getElementById('gasolinaWayne').value);
+            const alcoolStark = parseFloat(document.getElementById('alcoolStark').value);
+            const gasolinaStark = parseFloat(document.getElementById('gasolinaStark').value);
+            
+            const tanque = 42; // Litros do tanque
+            const precoAlcoolWayne = alcoolWayne * tanque;
+            const precoGasolinaWayne = gasolinaWayne * tanque;
+            const precoAlcoolStark = alcoolStark * tanque;
+            const precoGasolinaStark = gasolinaStark * tanque;
+
+            let resultado = "";
+
+            // Verifica o álcool em relação à gasolina
+            const alcoolMaisBaratoWayne = alcoolWayne < gasolinaWayne * 0.7;
+            const alcoolMaisBaratoStark = alcoolStark < gasolinaStark * 0.7;
+
+            if (alcoolMaisBaratoWayne && alcoolMaisBaratoStark) {
+                resultado = "É mais barato abastecer com álcool nos dois postos.";
+            } else if (alcoolMaisBaratoWayne) {
+                resultado = `É mais barato abastecer com álcool no posto Wayne Oil.`;
+            } else if (alcoolMaisBaratoStark) {
+                resultado = `É mais barato abastecer com álcool no posto Stark Petrol.`;
+            } else {
+                if (precoGasolinaWayne < precoGasolinaStark) {
+                    resultado = `É mais barato abastecer com gasolina no posto Wayne Oil.`;
+                } else {
+                    resultado = `É mais barato abastecer com gasolina no posto Stark Petrol.`;
+                }
+            }
+
+            document.getElementById('resultado').innerText = resultado;
+        }
+    </script>
+
+</body>
+</html>
+
+

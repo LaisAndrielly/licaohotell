@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Hóspedes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #e1bee7; /* Fundo roxo claro */
+        }
+        h1 {
+            text-align: center;
+            color: #6a0dad; /* Título roxo */
+        }
+        input {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            width: 80%;
+            border: 1px solid #6a0dad; /* Borda roxa */
+            border-radius: 5px;
+        }
+        button {
+            display: block;
+            margin: 10px auto;
+            padding: 10px;
+            background-color: #8a2be2; /* Botão roxo */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #7b1fa2; /* Tom mais escuro ao passar o mouse */
+        }
+        #resultado {
+            margin-top: 20px;
+            text-align: center;
+            color: #6a0dad; /* Texto do resultado roxo */
+        }
+    </style>
+</head>
+<body>
+    <h1>Cadastro de Hóspedes</h1>
+    <input type="text" id="nomeHóspede" placeholder="Nome do hóspede">
+    <input type="number" id="idadeHóspede" placeholder="Idade do hóspede">
+    <button id="cadastrar">Cadastrar</button>
+    <div id="resultado"></div>
+
+    <script>
+        const valorDiaria = 100; // Valor fixo da diária
+        let totalGratuidade = 0;
+        let totalMeia = 0;
+        let valorTotal = 0;
+
+        document.getElementById("cadastrar").addEventListener("click", function() {
+            const nome = document.getElementById("nomeHóspede").value;
+            const idade = parseInt(document.getElementById("idadeHóspede").value);
+
+            if (nome.toLowerCase() === "pare") {
+                document.getElementById("resultado").innerText = 
+                    `Total: R$${valorTotal.toFixed(2)}; ${totalGratuidade} gratuidade(s); ${totalMeia} meia(s)`;
+                return;
+            }
+
+            let mensagem = `${nome} cadastrada(o) com sucesso. `;
+            if (idade < 6) {
+                mensagem += `${nome} possui gratuidade.`;
+                totalGratuidade++;
+            } else if (idade > 60) {
+                mensagem += `${nome} paga meia.`;
+                valorTotal += valorDiaria / 2;
+                totalMeia++;
+            } else {
+                valorTotal += valorDiaria;
+            }
+
+            document.getElementById("resultado").innerText = mensagem;
+            document.getElementById("nomeHóspede").value = "";
+            document.getElementById("idadeHóspede").value = "";
+        });
+    </script>
+</body>
+</html>
+
+

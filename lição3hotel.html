@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Hóspedes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e1bee7; /* Fundo roxo claro */
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #6a0dad; /* Cor do título roxa */
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #6a0dad; /* Cor das labels roxa */
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #6a0dad; /* Borda roxa */
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #8a2be2; /* Cor do botão roxa */
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            background-color: #7b1fa2; /* Tom mais escuro ao passar o mouse */
+        }
+
+        #mensagem {
+            margin-top: 15px;
+            text-align: center;
+            color: #6a0dad; /* Cor da mensagem roxa */
+        }
+
+        #listaHospedes {
+            margin-top: 20px;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #listaHospedes li {
+            color: #6a0dad; /* Cor dos hóspedes roxa */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cadastro de Hóspedes</h1>
+        <form id="hospedeForm">
+            <label for="nome">Nome do Hóspede:</label>
+            <input type="text" id="nome" required>
+            <button type="submit">Cadastrar</button>
+        </form>
+        <div id="mensagem"></div>
+        <button id="listarButton">Listar Hóspedes</button>
+        <ul id="listaHospedes"></ul>
+    </div>
+
+    <script>
+        const form = document.getElementById('hospedeForm');
+        const mensagem = document.getElementById('mensagem');
+        const listaHospedes = document.getElementById('listaHospedes');
+
+        let hospedes = [];
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const nome = document.getElementById('nome').value;
+
+            if (hospedes.length < 15) {
+                hospedes.push(nome);
+                mensagem.textContent = `Hóspede ${nome} foi cadastrado(a) com sucesso!`;
+            } else {
+                mensagem.textContent = "Máximo de cadastros atingido.";
+            }
+
+            form.reset();
+        });
+
+        document.getElementById('listarButton').addEventListener('click', function() {
+            listaHospedes.innerHTML = '';
+            hospedes.forEach(hospede => {
+                const li = document.createElement('li');
+                li.textContent = hospede;
+                listaHospedes.appendChild(li);
+            });
+        });
+    </script>
+</body>
+</html>
